@@ -1,0 +1,60 @@
+<?xml version="1.0"?>
+<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
+
+    <!-- Hovedtabel: én række pr. farve -->
+    <table name="digidennis_fabric_color" resource="default" engine="innodb" comment="Fabric Colors">
+        <column xsi:type="int" name="entity_id" padding="10" unsigned="true" nullable="false" identity="true" comment="ID"/>
+        <column xsi:type="int" name="product_id" padding="10" unsigned="true" nullable="false" comment="Product ID"/>
+        <column xsi:type="int" name="option_id" padding="10" unsigned="true" nullable="false" comment="Option ID"/>
+        <column xsi:type="int" name="option_type_id" padding="10" unsigned="true" nullable="false" comment="Option Type ID"/>
+        <column xsi:type="smallint" name="store_id" padding="5" unsigned="true" nullable="false" default="0" comment="Store ID"/>
+
+        <column xsi:type="varchar" name="color_code" nullable="true" length="64" comment="Color Code"/>
+        <column xsi:type="varchar" name="color_label" nullable="false" length="255" comment="Color Label"/>
+        <column xsi:type="varchar" name="search_label" nullable="false" length="255" comment="Search Label"/>
+        <column xsi:type="varchar" name="image" nullable="true" length="255" comment="Primary Image Path"/>
+        <column xsi:type="varchar" name="url_key" nullable="true" length="255" comment="URL Key"/>
+
+        <column xsi:type="decimal" name="price" scale="4" precision="12" nullable="true" comment="Option Price"/>
+        <column xsi:type="smallint" name="is_active" padding="5" unsigned="true" nullable="false" default="1" comment="Is Active"/>
+
+        <!-- Magento 2.4.7-kompatible timestamps -->
+        <column xsi:type="timestamp" name="created_at" nullable="false" default="CURRENT_TIMESTAMP" comment="Created At"/>
+        <column xsi:type="timestamp" name="updated_at" nullable="true" default="NULL" comment="Updated At"/>
+
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="entity_id"/>
+        </constraint>
+
+        <index referenceId="DIGIDENNIS_FABRIC_COLOR_PRODUCT_ID" indexType="btree">
+            <column name="product_id"/>
+        </index>
+
+        <index referenceId="DIGIDENNIS_FABRIC_COLOR_OPTION_TYPE_ID" indexType="btree">
+            <column name="option_type_id"/>
+        </index>
+
+        <index referenceId="DIGIDENNIS_FABRIC_COLOR_URL_KEY" indexType="btree">
+            <column name="url_key"/>
+        </index>
+    </table>
+
+    <!-- Billedtabel: én til mange billeder pr. farve -->
+    <table name="digidennis_fabric_color_image" resource="default" engine="innodb" comment="Fabric Color Images">
+        <column xsi:type="int" name="image_id" padding="10" unsigned="true" nullable="false" identity="true" comment="Image ID"/>
+        <column xsi:type="int" name="color_id" padding="10" unsigned="true" nullable="false" comment="Color ID"/>
+        <column xsi:type="varchar" name="image" nullable="false" length="255" comment="Image Path"/>
+        <column xsi:type="varchar" name="label" nullable="true" length="255" comment="Image Label"/>
+        <column xsi:type="int" name="sort_order" padding="10" unsigned="true" nullable="false" default="0" comment="Sort Order"/>
+
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="image_id"/>
+        </constraint>
+
+        <index referenceId="DIGIDENNIS_FABRIC_COLOR_IMAGE_COLOR_ID" indexType="btree">
+            <column name="color_id"/>
+        </index>
+    </table>
+
+</schema>
