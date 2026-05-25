@@ -41,8 +41,7 @@ class Upload extends Action
             $upload = $uploader->save($media->getAbsolutePath($path));
 
             return $result->setData([
-                'file' => $upload['file'],
-                'url'  => '/media/' . $path . $upload['file']
+                'file' => $path . $upload['file']
             ]);
 
         } catch (\Exception $e) {
