@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
+
+    <event name="controller_action_postdispatch_catalog_product_save">
+        <observer name="digidennis_fabric_colors_save"
+                  instance="Digidennis\FabricColors\Observer\SaveFabricColors"/>
+    </event>
+</config>
