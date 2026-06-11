@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:Mview/etc/mview.xsd">
+
+    <view id="digidennis_fabric_color_index" class="Digidennis\FabricColors\Model\Indexer\FabricColorIndexer" group="indexer">
+        <subscriptions>
+            <!-- Erstat disse med dine faktiske tabelnavne -->
+            <table name="digidennis_fabric_color_image" entity_column="color_id"/>
+            <table name="digidennis_fabric_color" entity_column="color_id"/>
+        </subscriptions>
+    </view>
+
+</config>

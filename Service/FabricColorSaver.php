@@ -95,10 +95,49 @@ class FabricColorSaver
 
     private function saveImages(int $colorId, array $images): void
     {
+        // Normalize incoming paths
+        $normalize = function (string $path): string {
+            $path = ltrim($path, '/');
+
+            // Already has base folder?
+            if (strpos($path, 'fabriccolors/') === 0) {
+                return $path;
+            }
+
+            return 'fabriccolors/' . $path;
+        };
+
+        // Normalize new paths
+        $newImages = [];
+        foreach ($images as $sort => $img) {
+            $newImages[] = [
+                'path' => $normalize($img['file']),
+                'label' => $img['name'] ?? '',
+                'sort_order' => (int)$sort
+            ];
+        }
+
+        // Load old images
         $oldImages = $this->imageResource->getImagesByColorId($colorId);
 
-        $oldPaths = array_column($oldImages, 'image');
-        $newPaths = array_column($images, 'file');
+        // Normalize old paths
+        $oldImagesNorm = [];
+        foreach ($oldImages as $old) {
+            $oldImagesNorm[] = [
+                'path' => $normalize($old['image']),
+                'label' => $old['label'],
+                'sort_order' => (int)$old['sort_order']
+            ];
+        }
+
+        // If identical → do nothing
+        if ($newImages === $oldImagesNorm) {
+            return; // NO-TOUCH
+        }
+
+        // Delete removed images
+        $oldPaths = array_column($oldImagesNorm, 'path');
+        $newPaths = array_column($newImages, 'path');
 
         $toDelete = array_diff($oldPaths, $newPaths);
 
@@ -107,18 +146,26 @@ class FabricColorSaver
             $this->imageResource->deleteByPath($colorId, $path);
         }
 
-        foreach ($images as $sort => $img) {
-            $image = $this->imageFactory->create();
-            $path = ltrim($img['file'], '/');
-
-            if (strpos($path, 'fabriccolors/') !== 0) {
-                $path = 'fabriccolors/' . $path;
+        // Insert or update new images
+        foreach ($newImages as $img) {
+            // If exists, update sort_order + label
+            if (in_array($img['path'], $oldPaths, true)) {
+                $this->imageResource->updateImageMeta(
+                    $colorId,
+                    $img['path'],
+                    $img['label'],
+                    $img['sort_order']
+                );
+                continue;
             }
+
+            // Otherwise insert new
+            $image = $this->imageFactory->create();
             $image->setData([
                 'color_id'   => $colorId,
-                'image'      => $path,
-                'label'      => $img['name'] ?? '',
-                'sort_order' => (int)$sort,
+                'image'      => $img['path'],
+                'label'      => $img['label'],
+                'sort_order' => $img['sort_order']
             ]);
             $this->imageResource->save($image);
         }
@@ -126,9 +173,10 @@ class FabricColorSaver
 
     private function deleteFile(string $path): void
     {
+        /*
         $media = $this->filesystem->getDirectoryWrite(DirectoryList::MEDIA);
         if ($media->isExist($path)) {
             $media->delete($path);
-        }
+        }*/
     }
 }

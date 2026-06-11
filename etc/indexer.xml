@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:Indexer/etc/indexer.xsd">
+
+    <indexer id="digidennis_fabric_color_index"
+             view_id="digidennis_fabric_color_index"
+             class="Digidennis\FabricColors\Model\Indexer\FabricColorIndexer"
+             primary="color_id">
+        <title translate="true">Fabric Color Pixel Index</title>
+        <description translate="true">Scans fabric images and stores color data</description>
+    </indexer>
+
+</config>

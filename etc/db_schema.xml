@@ -56,4 +56,45 @@
         </index>
     </table>
 
+    <table name="digidennis_fabric_color_index" resource="default" engine="innodb" comment="Fabric Color Scan Index">
+
+        <column name="index_id" xsi:type="int" nullable="false" identity="true" unsigned="true" comment="Index ID"/>
+        <column name="color_id" xsi:type="int" nullable="false" unsigned="true" comment="Fabric Color ID"/>
+        <column name="image" xsi:type="varchar" nullable="false" length="255" comment="Image Path"/>
+
+        <!-- RGB -->
+        <column name="avg_r" xsi:type="smallint" nullable="false" default="0" comment="Average R"/>
+        <column name="avg_g" xsi:type="smallint" nullable="false" default="0" comment="Average G"/>
+        <column name="avg_b" xsi:type="smallint" nullable="false" default="0" comment="Average B"/>
+
+        <!-- HEX -->
+        <column name="hex" xsi:type="varchar" nullable="false" length="7" default="#000000" comment="HEX Color"/>
+
+        <!-- LAB -->
+        <column name="lab_l" xsi:type="decimal" scale="4" precision="8" nullable="false" default="0.0000" comment="LAB L"/>
+        <column name="lab_a" xsi:type="decimal" scale="4" precision="8" nullable="false" default="0.0000" comment="LAB A"/>
+        <column name="lab_b" xsi:type="decimal" scale="4" precision="8" nullable="false" default="0.0000" comment="LAB B"/>
+
+        <!-- Status -->
+        <column name="status" xsi:type="smallint" nullable="false" default="1" comment="Scan Status (1=OK,0=Error)"/>
+        <column name="error_message" xsi:type="text" nullable="true" comment="Error Message"/>
+
+        <!-- Timestamps -->
+        <column name="scanned_at" xsi:type="timestamp" nullable="false" default="CURRENT_TIMESTAMP" comment="Scan Timestamp"/>
+
+        <!-- Keys -->
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="index_id"/>
+        </constraint>
+
+        <index referenceId="FABRIC_COLOR_INDEX_COLOR_ID" indexType="btree">
+            <column name="color_id"/>
+        </index>
+
+        <index referenceId="FABRIC_COLOR_INDEX_IMAGE" indexType="btree">
+            <column name="image"/>
+        </index>
+
+    </table>
+
 </schema>
